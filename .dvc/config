@@ -1,0 +1,4 @@
+[core]
+    remote = datasetstore
+['remote "datasetstore"']
+    url = /mnt/SynologyNAS/Projects/TrackAnything/DatasetStore/
