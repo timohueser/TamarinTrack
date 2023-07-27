@@ -38,13 +38,18 @@ class TaxonDataModule(pl.LightningDataModule):
             transforms=self.transforms_val,
             tokenizer=self.tokenizer,
         )
+
         self.steps_per_epoch = len(self.taxon_train) // self.batch_size
 
     def train_dataloader(self):
-        return DataLoader(self.taxon_train, batch_size=self.batch_size)
+        return DataLoader(
+            self.taxon_train, batch_size=self.batch_size, num_workers=8, drop_last=True
+        )
 
     def val_dataloader(self):
-        return DataLoader(self.taxon_val, batch_size=self.batch_size)
+        return DataLoader(
+            self.taxon_val, batch_size=self.batch_size, num_workers=8, drop_last=True
+        )
 
 
 if __name__ == "__main__":

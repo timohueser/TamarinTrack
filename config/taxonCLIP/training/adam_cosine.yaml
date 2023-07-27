@@ -3,8 +3,10 @@ image_data_dir: data/ClassificationDatasets/iNaturalist/images
 taxon_data_path: data/ClassificationDatasets/iNaturalist/taxon2.json
 optimizer: adam
 lr_scheduler: one_cycle
-learning_rate: 3e-4
+learning_rate: 1e-3
 batch_size: 32
-num_epochs: 10
+accum_grads: 2 #TODO: not working currently!
+num_epochs: 60
+num_devices: 4
 hf_tokenizer_name: ${taxonCLIP.model.textTower.hf_tokenizer_name}
 image_size: ${taxonCLIP.model.visionTower.image_size}

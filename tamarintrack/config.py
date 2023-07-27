@@ -49,6 +49,8 @@ class TrainingConfig:
     optimizer: str = "adam"
     learning_rate: float = 3e-4
     batch_size: int = 32
+    accum_grads: int = 2
+    num_devices: int = 4
     num_epochs: int = 10
     hf_tokenizer_name: str = MISSING
     image_size: int = MISSING
