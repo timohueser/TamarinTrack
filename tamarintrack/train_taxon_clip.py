@@ -5,17 +5,23 @@ Author: Khuyen Tran
 """
 
 import hydra
-from omegaconf import DictConfig
+from omegaconf import OmegaConf
+
+from .config import Config
+from .taxonCLIP.taxonCLIP import TaxonCLIP
 
 
 @hydra.main(config_path="../config", config_name="main", version_base=None)
-def train_model(config: DictConfig):
+def train_taxon_clip(cfg: Config):
+    cfg = OmegaConf.merge(OmegaConf.structured(Config), cfg)
+    print(OmegaConf.to_yaml(cfg))
     """Function to train the model"""
+    print(f"Visual Model used: {cfg.taxonCLIP.model.visionTower.timm_model_name}")
+    print(f"Text Model used: {cfg.taxonCLIP.model.textTower.hf_model_name}")
+    print(cfg.taxonCLIP.model.textTower.embedding_dim)
 
-    print(f"Train modeling using {config.data.processed}")
-    print(f"Model used: {config.model.name}")
-    print(f"Save the output to {config.data.final}")
+    TaxonCLIP(cfg.taxonCLIP)
 
 
 if __name__ == "__main__":
-    train_model()
+    train_taxon_clip()

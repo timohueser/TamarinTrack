@@ -1,14 +1,22 @@
 [tool.poetry]
-name = "TamarinTrack"
+name = "tamarintrack"
 version = "0.1.0"
 description = ""
 authors = ["Timo"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 dvc = "^2.10.0"
 hydra-core = "^1.1.1"
 pdoc3 = "^0.10.0"
+pillow = "^10.0.0"
+torch = ">=2.0.0, !=2.0.1" #TODO: This is needed because the poetry package for torch 2.0.1 is broken!
+torchvision = "^0.15.1"
+transformers = "^4.31.0"
+ftfy = "^6.1.1"
+matplotlib = "^3.7.2"
+lightning = "^2.0.6"
+timm = "^0.9.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
@@ -20,7 +28,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
 ignore = ["E501"]
-select = ["B","C","E","F","W","B9", "I", "Q"]
+select = ["B", "C", "E", "F", "W", "B9", "I", "Q"]
 
 # Exclude a variety of commonly ignored directories.
 exclude = [
@@ -45,6 +53,7 @@ exclude = [
     "dist",
     "node_modules",
     "venv",
+    ".dvc",
 ]
 
 # Same as Black.

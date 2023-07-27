@@ -1,0 +1,3 @@
+defaults:
+  - model: distilbert-convnext-small
+  - training: adam_cosine

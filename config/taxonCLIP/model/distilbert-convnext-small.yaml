@@ -1,0 +1,10 @@
+embedding_dim: 512
+visionTower:
+  timm_model_name: convnext_small
+  pretrained: True
+  embedding_dim: ${taxonCLIP.model.embedding_dim}
+textTower:
+  hf_model_name: distilbert-base-uncased
+  hf_tokenizer_name: distilbert-base-uncased
+  pretrained: True
+  embedding_dim: ${taxonCLIP.model.embedding_dim}
