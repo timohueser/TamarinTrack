@@ -17,7 +17,7 @@ class TaxonDataset(Dataset):
         image_folder: str,
         taxon_path: str,
         transforms: Compose,
-        tokenizer: PreTrainedTokenizerBase = None,
+        tokenizer: PreTrainedTokenizerBase,
     ):
         logging.debug(
             f"Loading json data from {taxon_path} and images from {image_folder}."
@@ -44,8 +44,9 @@ class TaxonDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx: int):
-        images = self.transforms(Image.open(str(self.data[idx]["image"])))
-        Image.open(str(self.data[idx]["image"]))
+        images = self.transforms(
+            Image.open(str(self.data[idx]["image"])).convert("RGB")
+        )
         valid_names = self.data[idx]["valid_names"]
         name = random.choice(valid_names)
         valid_names = valid_names + [""] * (self.max_list_len - len(valid_names))

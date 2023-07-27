@@ -3,7 +3,7 @@ from typing import Optional
 import lightning.pytorch as pl
 import torch
 import torch.functional as F
-from torch import nn
+from torch.optim.lr_scheduler import OneCycleLR
 
 from ..config import TaxonCLIPConfig
 from .textTower import TextTower
@@ -14,6 +14,7 @@ class TaxonCLIP(pl.LightningModule):
     def __init__(
         self,
         cfg: TaxonCLIPConfig,
+        datamodule: Optional[pl.LightningDataModule] = None,
         output_dict: bool = False,
     ):
         super().__init__()
@@ -21,6 +22,8 @@ class TaxonCLIP(pl.LightningModule):
         self.visionTower = VisionTower(cfg.model.visionTower)
         self.textTower = TextTower(cfg.model.textTower)
         self.output_dict = output_dict
+        self.steps_per_epoch = 0
+        self.datamodule = datamodule
 
     def lock_image_tower(self, unlocked_groups=0, freeze_bn_stats=False):
         # lock image tower as per LiT - https://arxiv.org/abs/2111.07991
@@ -59,16 +62,15 @@ class TaxonCLIP(pl.LightningModule):
         return image_features, text_features, self.logit_scale.exp()
 
     def training_step(self, batch, batch_idx):
-        # training_step defines the train loop.
-        # it is independent of forward
-        x, y = batch
-        x = x.view(x.size(0), -1)
-        z = self.encoder(x)
-        x_hat = self.decoder(z)
-        loss = nn.functional.mse_loss(x_hat, x)
+        loss = 0
         # Logging to TensorBoard (if installed) by default
         self.log("train_loss", loss)
-        return loss
+        self.log("lr", self.trainer.optimizers[0].param_groups[0]["lr"])
+        return None
+
+    def validation_step(self, batch, batch_idx):
+        loss = 0
+        self.log("val_loss", loss)
 
     def configure_optimizers(self):
         if self.cfg.training.optimizer == "adam":
@@ -77,4 +79,21 @@ class TaxonCLIP(pl.LightningModule):
             )
         else:
             raise NotImplementedError
-        return optimizer
+
+        if self.cfg.training.lr_scheduler == "one_cycle":
+            if self.datamodule is not None:
+                self.steps_per_epoch = self.datamodule.steps_per_epoch
+            assert (
+                self.steps_per_epoch > 0
+            ), "Need to specify datamodule if using one_cycle"
+            scheduler = {
+                "scheduler": OneCycleLR(
+                    optimizer,
+                    max_lr=self.cfg.training.learning_rate,
+                    steps_per_epoch=self.steps_per_epoch,
+                    epochs=self.cfg.training.num_epochs,
+                ),
+                "interval": "step",
+                "frequency": 1,
+            }
+        return {"optimizer": optimizer, "lr_scheduler": scheduler}

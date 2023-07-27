@@ -2,6 +2,7 @@ embedding_dim: 512
 visionTower:
   timm_model_name: convnext_small
   pretrained: True
+  image_size: 224
   embedding_dim: ${taxonCLIP.model.embedding_dim}
 textTower:
   hf_model_name: distilbert-base-uncased

@@ -91,3 +91,4 @@ target/
 
 # Hydra logs
 outputs
+lightning_logs

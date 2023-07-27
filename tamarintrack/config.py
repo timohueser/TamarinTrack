@@ -19,6 +19,7 @@ class VisionTowerConfig:
     timm_proj_bias: bool = False  # enable bias final projection
     timm_drop: float = 0.0  # head dropout
     timm_drop_path: Optional[float] = None  # backbone stochastic depth
+    image_size: int = 224
 
 
 @dataclass
@@ -41,8 +42,16 @@ class TaxonCLIPModelConfig:
 
 @dataclass
 class TrainingConfig:
+    dataset: str = MISSING
+    image_data_dir: str = MISSING
+    taxon_data_path: str = MISSING
+    lr_scheduler: str = "one_cycle"
     optimizer: str = "adam"
     learning_rate: float = 3e-4
+    batch_size: int = 32
+    num_epochs: int = 10
+    hf_tokenizer_name: str = MISSING
+    image_size: int = MISSING
 
 
 @dataclass

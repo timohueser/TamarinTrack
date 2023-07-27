@@ -5,9 +5,11 @@ Author: Khuyen Tran
 """
 
 import hydra
+from lightning.pytorch import Trainer, seed_everything
 from omegaconf import OmegaConf
 
 from .config import Config
+from .datamodules.factory import create_data_module
 from .taxonCLIP.taxonCLIP import TaxonCLIP
 
 
@@ -20,7 +22,12 @@ def train_taxon_clip(cfg: Config):
     print(f"Text Model used: {cfg.taxonCLIP.model.textTower.hf_model_name}")
     print(cfg.taxonCLIP.model.textTower.embedding_dim)
 
-    TaxonCLIP(cfg.taxonCLIP)
+    datamodule = create_data_module(cfg.taxonCLIP.training)
+    model = TaxonCLIP(cfg.taxonCLIP, datamodule=datamodule)
+
+    seed_everything(42, workers=True)
+    trainer = Trainer(devices=1, max_epochs=5)
+    trainer.fit(model=model, datamodule=datamodule)
 
 
 if __name__ == "__main__":
