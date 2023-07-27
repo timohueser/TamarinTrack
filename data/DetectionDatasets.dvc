@@ -1,0 +1,5 @@
+outs:
+- md5: f4aa649ea2b03a5dee6e984a3b66b28c.dir
+  size: 1009777177002
+  nfiles: 2504076
+  path: DetectionDatasets
