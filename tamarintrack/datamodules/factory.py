@@ -1,6 +1,7 @@
 from torchvision.transforms import (
     Compose,
     InterpolationMode,
+    Normalize,
     RandomResizedCrop,
     ToTensor,
 )
@@ -26,6 +27,7 @@ def create_taxon_data_module(cfg: TrainingConfig):
                 interpolation=InterpolationMode.BICUBIC,
             ),
             ToTensor(),
+            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ]
     )
     transforms_val = Compose(
@@ -35,6 +37,7 @@ def create_taxon_data_module(cfg: TrainingConfig):
                 interpolation=InterpolationMode.BICUBIC,
             ),
             ToTensor(),
+            Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
         ]
     )
     tokenizer = HFTokenizer(cfg.hf_tokenizer_name)

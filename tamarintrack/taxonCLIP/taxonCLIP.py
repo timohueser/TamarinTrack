@@ -101,7 +101,7 @@ class TaxonCLIP(pl.LightningModule):
             image_features, text_features, logit_scale, names, all_valid_names
         )
         metrics["val_loss"] = loss
-        self.log_dict(metrics, on_step=False, on_epoch=True)
+        self.log_dict(metrics, on_step=False, on_epoch=True, prog_bar=True)
 
     def configure_optimizers(self):
         if self.cfg.training.optimizer == "adam":

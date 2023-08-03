@@ -14,6 +14,7 @@ class ClipMetrics(nn.Module):
         metrics = {}
         logits_per_image = (logit_scale * image_features @ text_features.t()).detach()
         logits_per_text = logits_per_image.t().detach()
+        all_valid_names = [list(row) for row in zip(*all_valid_names, strict=True)]
         ground_truth = self.get_multi_label_ground_truth(
             all_names, all_valid_names, image_features
         )
@@ -35,7 +36,6 @@ class ClipMetrics(nn.Module):
 
             precision = TP / (TP + FP)
             recall = TP / (TP + FN)
-
             preds = (logit == gt).float()
             preds = preds.detach()
             metrics[f"{name}_acc"] = torch.mean(preds) * 100

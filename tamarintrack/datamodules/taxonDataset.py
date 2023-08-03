@@ -57,9 +57,21 @@ class TaxonDataset(Dataset):
 
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
+    from torchvision.transforms import (
+        Compose,
+        InterpolationMode,
+        RandomResizedCrop,
+    )
 
     tokenizer = HFTokenizer("distilbert-base-uncased")
-    transforms = Compose([])
+    transforms = Compose(
+        [
+            RandomResizedCrop(
+                224,
+                interpolation=InterpolationMode.BICUBIC,
+            ),
+        ]
+    )
 
     iNaturalist_images = "data/ClassificationDatasets/iNaturalist/images/train"
     iNaturalist_taxon = "data/ClassificationDatasets/iNaturalist/taxon2.json"
@@ -70,7 +82,7 @@ if __name__ == "__main__":
         transforms=transforms,
         tokenizer=tokenizer,
     )
-    item = dataset.__getitem__(0)
+    item = dataset.__getitem__(10000)
 
     plt.imshow(item[0])
-    plt.show()
+    plt.savefig("test.jpg")

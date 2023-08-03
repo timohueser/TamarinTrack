@@ -43,12 +43,20 @@ class TaxonDataModule(pl.LightningDataModule):
 
     def train_dataloader(self):
         return DataLoader(
-            self.taxon_train, batch_size=self.batch_size, num_workers=8, drop_last=True
+            self.taxon_train,
+            batch_size=self.batch_size,
+            num_workers=8,
+            drop_last=True,
+            shuffle=True,
         )
 
     def val_dataloader(self):
         return DataLoader(
-            self.taxon_val, batch_size=self.batch_size, num_workers=8, drop_last=True
+            self.taxon_val,
+            batch_size=self.batch_size,
+            num_workers=8,
+            drop_last=True,
+            shuffle=True,
         )
 
 
